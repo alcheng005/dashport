@@ -8,7 +8,7 @@ class Dashport {
   private _sm: SessionManager;
   // public since _sId needs to be accessed by SessionManager but _ since a
   // developer should not access it
-  public _sId: string;
+  public _sId: string = '';
   public initialize: Function;
 
   constructor(frmwrk: string) {
@@ -120,8 +120,8 @@ class Dashport {
 
         // serializedId will be obtained by calling SessionManager's serialize
         // function, which will invoke the serializer(s) the developer specified
-        const serializedId: string = self._sm.serialize(self._serializers, userData);
-        
+        const serializedId: string = self._sm.serialize(self._serializers, userData.userInfo);
+
         // use SessionManager's logIn method to create a session object on
         // ctx.state._dashport and to assign serializedId to the _sId property
         // of this instance of Dashport
@@ -175,7 +175,7 @@ class Dashport {
     if (serializer.length !== 1) {
       throw new Error('ERROR in addSerializer: Serializer function must have 1 parameter.');
     }
-    
+  
     // the below if statement is currently not needed. TODO in SessionManager.serialize method
     // if (serializerName === 'all') {
     //   throw new Error('ERROR in addSerializer: Cannot use the name \'all\'. It is a special keyword Dashport uses.')
@@ -183,7 +183,7 @@ class Dashport {
     if (this._serializers[serializerName] !== undefined) {
       throw new Error('ERROR in addSerializer: A serializer with this name already exists.');
     }
-    
+  
     this._serializers[serializerName] = serializer;
   }
 
@@ -200,7 +200,7 @@ class Dashport {
     if (this._serializers[serializerName] === undefined) {
       throw new Error('ERROR in removeSerializer: The specified serializer does not exist.');
     }
-    
+
     delete this._strategies[serializerName];
   }
 
@@ -238,7 +238,7 @@ class Dashport {
 
     delete this._strategies[stratName];
   }
-  
+
   /**
    * method: getUserInfo
    * @param: the serialized id that comes from serializeUser
